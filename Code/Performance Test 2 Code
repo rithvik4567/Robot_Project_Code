@@ -1,0 +1,426 @@
+Performance Test 2 Code – Ticket
+The code we used for performance test 2 is shown below.
+
+The first program below was for our initial approach to completing the test with the ticket post mounted on a servo underneath the chassis and sticking out the side to move the ticket from the top-level of the course. However, this proved to be more difficult than anticipated and the mechanism was modified to instead reach the ticket from the lower level. The code from this second approach is shown in the second program below.
+
+Note: The mechanism was not fully constructed when the test was performed, however, this code was still to be used in the final competitions with small tweaks to fit the finalized mechanism.
+
+The goal for this code was for the robot to go up the ramp once the starting light was pressed and to then position itself so that it would drive backwards towards the sink to drop the tray off. Then it would proceed to drive towards the ticket post and using a servo motor, a post attachment would rotate out from the bottom of the robot and slide the ticket.
+
+#include <FEHLCD.h>
+#include <FEHIO.h>
+#include <FEHUtility.h>
+#include <FEHMotor.h>
+#include <FEHRPS.h>
+#include <FEHServo.h>
+ 
+//Declarations for encoders & motors
+DigitalEncoder right_encoder(FEHIO::P0_0);
+DigitalEncoder left_encoder(FEHIO::P1_0);
+FEHMotor right_motor(FEHMotor::Motor0,9.0);
+FEHMotor left_motor(FEHMotor::Motor1,9.0);
+//Declaration for CdS cell
+AnalogInputPin lightSensor(FEHIO::P2_0);
+//Declaring the servo motor
+FEHServo servo(FEHServo::Servo0);
+ 
+ 
+void move_forward(int percent, int inches) //using encoders
+{
+//convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Set both motors to desired percent
+right_motor.SetPercent(-1 * (percent + 5));
+left_motor.SetPercent(percent);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void move_backward(int percent, int inches) //using encoders
+{
+//convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Set both motors to desired percent
+right_motor.SetPercent(percent);
+left_motor.SetPercent(-1 * (percent - 5));
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void right_only(int percent, int inches) //using encoders
+{
+//convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Set both motors to desired percent
+right_motor.SetPercent(-1 * (percent + 5));
+left_motor.SetPercent(0);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void turn_right(int percent, int degrees) //using encoders
+{
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Convert counts to degrees
+int counts = (degrees * 225) / 90;
+ 
+//Set both motors to desired percent
+//hint: set right motor backwards, left motor forwards
+ 
+right_motor.SetPercent(percent + 5);
+left_motor.SetPercent(percent);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+ 
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void turn_left(int percent, int degrees) //using encoders
+{
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Convert counts to degrees
+int counts = (degrees * 225) / 90;
+ 
+//Set both motors to desired percent
+ 
+right_motor.SetPercent(-1*(percent + 5));
+left_motor.SetPercent(-1*percent);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+ 
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void up_ramp(int percent, int inches)
+{
+//Convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+//Set both motors to desired percent
+right_motor.SetPercent(-1 * (percent + 9));
+left_motor.SetPercent(percent);
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+int main(void)
+{
+ 
+//Declaring the variables for the motor power percentages and initializing them
+int motor_percent = 25;
+int negative_motor_percent = -25;
+ 
+//Setting the min and max values for the servo
+servo.SetMin(500);
+servo.SetMax(2324);
+ 
+servo.SetDegree(135);
+ 
+ 
+while (true){
+//Continuously checking to see if the light is turned on
+if (lightSensor.Value() < 2.7){
+   LCD.Write(lightSensor.Value());
+//move forward 17 inches
+   move_forward(motor_percent, 17);
+//turn right 53 degrees
+   Sleep(0.25);
+   turn_right(motor_percent, 50);
+   //move forward 2 inches
+   move_forward(motor_percent, 2);
+//go forward up the ramp
+   up_ramp(motor_percent,20);
+   //move forward 7 inches
+   move_forward(motor_percent, 2);
+  /* //turn left 30 degrees
+   Sleep(0.25);
+   turn_left(motor_percent, 30);
+   //move forward 14 inches
+   move_forward(motor_percent, 12);
+   //turn right 30 degrees
+    Sleep(0.25);
+   turn_right(motor_percent, 35);
+   //move backward 12 inches
+   move_backward(2*motor_percent, 16);
+   //move_forward 2 inch
+   Sleep(.25);
+   move_forward(motor_percent, 6);
+   //turn right 90 degrees
+    Sleep(0.25);
+   turn_right(motor_percent, 90);
+   //move forward 10 inches
+   //move_forward(motor_percent, 10);
+   //rotate ticket-sliding arm 130 degrees
+   //servo.SetDegree(0);
+   //turn right 20 degrees
+    Sleep(0.25);
+    move_forward(motor_percent, 8);
+   turn_right(motor_percent, 90);
+*/
+   //move forward 13 inches
+   //move_forward(motor_percent, 8);
+ 
+   turn_right(motor_percent, 95);
+   move_forward(motor_percent, 14);
+   //rotate ticket sliding arm to 90 degrees
+   servo.SetDegree(0);
+   Sleep(2.0);
+   //move backward 8 inches
+   move_backward(motor_percent, 8);
+   //move forward 3 inches
+   move_forward(motor_percent, 3);
+   //rotate ticket sliding arm to 0 degrees
+   servo.SetDegree(135);
+   //turn left 90 degrees
+    Sleep(0.25);
+   turn_left(motor_percent, 90);
+   //move forward 25 inches
+   move_forward(motor_percent, 25);
+}
+}
+ 
+ 
+}
+This code involved the robot moving forward once the startling light was activated and approaching the ticket from the bottom floor. Using the post attachment, the servo motor positioned the post next to the ticket and dragged it across. Then the robot would attempt to run into the trash can to knock the tray into the top of the trash can, which proved to be unsuccessful.
+
+#include <FEHLCD.h>
+#include <FEHIO.h>
+#include <FEHUtility.h>
+#include <FEHMotor.h>
+#include <FEHRPS.h>
+#include <FEHServo.h>
+ 
+//Declarations for encoders & motors
+DigitalEncoder right_encoder(FEHIO::P0_0);
+DigitalEncoder left_encoder(FEHIO::P1_0);
+FEHMotor right_motor(FEHMotor::Motor0,9.0);
+FEHMotor left_motor(FEHMotor::Motor1,9.0);
+//Declaration for CdS cell
+AnalogInputPin lightSensor(FEHIO::P2_0);
+//Declaring the servo motor
+FEHServo servo(FEHServo::Servo0);
+ 
+ 
+void move_forward(int percent, int inches) //using encoders
+{
+//convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Set both motors to desired percent
+right_motor.SetPercent(-1 * (percent + 5));
+left_motor.SetPercent(percent);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void move_backward(int percent, int inches) //using encoders
+{
+//convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Set both motors to desired percent
+right_motor.SetPercent(percent);
+left_motor.SetPercent(-1 * (percent - 5));
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void right_only(int percent, int inches) //using encoders
+{
+//convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Set both motors to desired percent
+right_motor.SetPercent(-1 * (percent + 5));
+left_motor.SetPercent(0);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void turn_right(int percent, int degrees) //using encoders
+{
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Convert counts to degrees
+int counts = (degrees * 225) / 90;
+ 
+//Set both motors to desired percent
+//hint: set right motor backwards, left motor forwards
+ 
+right_motor.SetPercent(percent + 5);
+left_motor.SetPercent(percent);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+ 
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void turn_left(int percent, int degrees) //using encoders
+{
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+ 
+//Convert counts to degrees
+int counts = (degrees * 225) / 90;
+ 
+//Set both motors to desired percent
+ 
+right_motor.SetPercent(-1*(percent + 5));
+left_motor.SetPercent(-1*percent);
+ 
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+ 
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+ 
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+void up_ramp(int percent, int inches)
+{
+//Convert inches to counts
+int counts = inches * 40.5;
+//Reset encoder counts
+right_encoder.ResetCounts();
+left_encoder.ResetCounts();
+//Set both motors to desired percent
+right_motor.SetPercent(-1 * (percent + 9));
+left_motor.SetPercent(percent);
+//While the average of the left and right encoder is less than counts,
+//keep running motors
+while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+//Turn off motors
+right_motor.Stop();
+left_motor.Stop();
+}
+ 
+int main(void)
+{
+ 
+//Declaring the variables for the motor power percentages and initializing them
+int motor_percent = 25;
+int negative_motor_percent = -25;
+ 
+//Setting the min and max values for the servo
+servo.SetMin(500);
+servo.SetMax(2324);
+ 
+servo.SetDegree(135);
+ 
+ 
+while (true){
+//Continuously checking to see if the light is turned on
+if (lightSensor.Value() < 2.7){
+   LCD.Write(lightSensor.Value());
+   turn_right(motor_percent, 50);
+   move_forward(motor_percent, 20);
+   turn_left(motor_percent, 50);
+   turn_right(motor_percent, 20);
+   move_backward(motor_percent, 8);
+   turn_left(motor_percent, 90);
+   move_forward(motor_percent, 27);
+   turn_left(motor_percent, 90);
+   move_backward(2*motor_percent, 18);
+   move_forward(motor_percent, 10);
+   turn_left(motor_percent, 90);
+   move_forward(motor_percent, 10);
+   turn_left(motor_percent, 90);
+   //move_forward(motor_percent, 6);
+   up_ramp(motor_percent, 20);
+   turn_right(motor_percent, 20);
+   move_forward(motor_percent, 24);
+   break;
+}
+}
+}
