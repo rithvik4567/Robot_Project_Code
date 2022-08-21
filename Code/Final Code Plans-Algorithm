@@ -1,0 +1,52 @@
+Final Code Plans – Algorithm
+Below is an algorithm we created to plan out our final competition code. This was done between performance tests 1 and 2, and due to the changes made in 
+performance test two our strategy would likely change, however, the algorithm is generally the same structure as our final code would’ve been.
+
+Algorithm for Competition Code
+1) Declare the motor percentages for the robot to go forward and backwards at 25% and -25%.
+2) Use light sensor to help the robot identify that the course has been turned on when the light turns on. If the value the sensor reads is less than 2.7, 
+then the light is turned on
+3) Have the robot go straight for 11.5’ and turn 37 degrees to the left to align with the light in front of the jukebox.
+4) Robot will go straight 8.5’ until the light sensor is directly above the light in front of the jukebox.
+5) If the robot reads the light as red, the sensor reads a value less than 1, it will go forward a certain distance and turn to the left, if the color it 
+reads is blue, the sensor reads a value greater than 1 it will turn left immediately.
+6) The robot will continue forward 3’ until it hits the corresponding light on the jukebox and then back up 4’.
+7) Depending on the light the robot just pressed, the robot will travel 3.5’ if the light is blue and 10.5’ if the color is red and turn left 90 degrees 
+to align itself with the ramp.
+8) Have the robot travel 20’ up the ramp until it reaches the top. Then turn to the left 90 degrees and stop to deposit the sink.
+9) After depositing the tray, the robot will turn 90 degrees to the left and use optosensors and RPS to follow the black line about 12’ and determine 
+which lever it needs to press on the ice cream machine.
+10) The robot will then go forward 8’ and press the correct level for about 7 seconds and flip it back up.
+11) The robot will then travel 8’ backward and turn 90 degrees to the right and continue forward about 10’ to reach the burger.
+12) The robot will then hook on to the burger and travel about 6’ forward to flip the burger.
+13) The robot will then turn right 90 degrees and go forward 26’.
+14) The robot will then turn 90 degrees to the right and the post attachment will rest on the ticket. The robot will then move forward about 10’, dragging 
+the ticket with it.
+15) The robot will then proceed down the ramp for about 11’ and turn about 30 degrees to the left
+16) The robot will then proceed about 15’ straight until the red button is pressed to end the run.
+ 
+Description:
+First declare the speed of the robot motors in percentages for the right and left motors. Then make sure that the course has been turned on by having the 
+robot detect the light at the start. Have the robot maneuver the course until it reaches the light next to the jukebox. If the light is read as blue, the 
+robot will turn to the left and press the blue button. If the light is read as red, the robot will move forward and then turn left to press the red button.
+Then the robot will back up and navigate up the ramp to the sink and drop the tray off. The robot will then use RPS to determine what flavor of ice cream 
+needs to be dispensed and follow the black line to the corresponding lever and push it down for 7 seconds and then push it back up. The robot then 
+navigates to the burger and flip it using the hook on the body of the robot. The robot will then navigate to the ticket and use the post attachment to 
+push the ticket from one end to the other. Then the robot will finally navigate down the ramp and press the button at the start of the course to end the 
+run.
+
+Function Description:
+Function Name- move_forward
+Inputs- The percentage that the motors operate for the wheels, the number of inches that the robot should move.
+Output- There are no outputs, the function is of the type void
+
+Algorithm:
+1)Convert the number of inches passed into counts
+2)Reset the number of counts in both the left and right encoders
+3)Make a while loop so it keeps looping while the average of the left and right encoders is less than counts, this ensures the motors keep running
+4)Turn off the motors.
+
+Description:
+The function takes in two parameters, the percentage the wheels are operating at and the number of inches the robot moves. It then converts the inches 
+to counts and resets the counts in both the left and right encoders. It then uses a loop to see when the average of the two encoders is less than the 
+counts passed. Once the average surpasses the counts, the distance desired has been reached and the motors are both turned off.
