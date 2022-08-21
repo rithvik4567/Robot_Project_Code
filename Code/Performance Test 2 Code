@@ -1,11 +1,16 @@
 Performance Test 2 Code – Ticket
 The code we used for performance test 2 is shown below.
 
-The first program below was for our initial approach to completing the test with the ticket post mounted on a servo underneath the chassis and sticking out the side to move the ticket from the top-level of the course. However, this proved to be more difficult than anticipated and the mechanism was modified to instead reach the ticket from the lower level. The code from this second approach is shown in the second program below.
+The first program below was for our initial approach to completing the test with the ticket post mounted on a servo underneath the chassis and sticking 
+out the side to move the ticket from the top-level of the course. However, this proved to be more difficult than anticipated and the mechanism was 
+modified to instead reach the ticket from the lower level. The code from this second approach is shown in the second program below.
 
-Note: The mechanism was not fully constructed when the test was performed, however, this code was still to be used in the final competitions with small tweaks to fit the finalized mechanism.
+Note: The mechanism was not fully constructed when the test was performed, however, this code was still to be used in the final competitions with small 
+tweaks to fit the finalized mechanism.
 
-The goal for this code was for the robot to go up the ramp once the starting light was pressed and to then position itself so that it would drive backwards towards the sink to drop the tray off. Then it would proceed to drive towards the ticket post and using a servo motor, a post attachment would rotate out from the bottom of the robot and slide the ticket.
+The goal for this code was for the robot to go up the ramp once the starting light was pressed and to then position itself so that it would drive backwards
+towards the sink to drop the tray off. Then it would proceed to drive towards the ticket post and using a servo motor, a post attachment would rotate out 
+from the bottom of the robot and slide the ticket.
 
 #include <FEHLCD.h>
 #include <FEHIO.h>
