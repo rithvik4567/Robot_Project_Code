@@ -1,7 +1,9 @@
 Performance Test 3 Code – Hotplate
 The code we used for performance test 3 is shown below.
 
-The robot would start once the starting light was activated and would proceed to go up the ramp and approach the hotplate. Then using the same post attachment used in the previous performance test with the servo motor, the robot would lift the hotplate up to flip the burger and then let go to have the hotplate fall back down. Then the robot would proceed towards the ice cream levers and press a lever down.
+The robot would start once the starting light was activated and would proceed to go up the ramp and approach the hotplate. Then using the same post 
+attachment used in the previous performance test with the servo motor, the robot would lift the hotplate up to flip the burger and then let go to have 
+the hotplate fall back down. Then the robot would proceed towards the ice cream levers and press a lever down.
 
 #include <FEHLCD.h>
 #include <FEHIO.h>
