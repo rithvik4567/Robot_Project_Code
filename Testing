@@ -1,0 +1,16 @@
+Testing – Exploration Activities
+Throughout this course, a number of “exploration activities” were performed by the faculty. These gave the teams a chance to interact with and learn about 
+different aspects of the robot available to us including shaft encoding, light detection, line-following, and RPS navigation (robot positioning system).
+
+The first exploration was centered around the CdS cell and microswitches used to detect walls. based on our results from this, we determined that a
+yellow filter over the CdS cell would be best for differentiating the color of the jukebox light. We decided to implement this in our robot’s design. 
+While the microswitches were useful, we decided they would be best as a secondary method of navigation and decided not to use them on our robot initially, 
+but to make it possible to add them if needed.
+
+The second performance test was centered around line following and shaft encoding. The shaft encoding proved to be very useful, and after seeing how it 
+worked, we decided to use igwan motors and the built-in shaft encoding on our robot as a main method of navigation. Line following initially seemed useful,
+however, we soon realized that much of the course could be completed without it, and in fact sometimes more efficiently.
+
+The third test was centered around RPS and Data logging. The RPS system allowed the robot to locate itself on the course and self-correct. We planned from 
+the beginning to use this, and this exploration confirmed its usefulness. Data logging out tests seemed like it could be helpful if there were situations
+where we were unable to visually tell what tweaks needed to be made, however, this was never needed.
